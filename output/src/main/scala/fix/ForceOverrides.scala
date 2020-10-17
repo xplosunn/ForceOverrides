@@ -5,9 +5,21 @@ object ForceOverrides {
     def print(s: String): Unit
   }
 
-  object StdOut extends Printer {
+  abstract class Writer {
+    def write(s: String): Unit
+  }
+
+  object StdOut extends Writer with Printer {
     override def print(sx: String): Unit = System.out.print(sx)
     def myprint(sx: String): Unit = System.out.print(sx)
+    override def write(sx: String): Unit = System.out.print(sx)
+    override def toString: String = "StdOut"
+  }
+
+  class StdOutImpl extends Writer with Printer {
+    override def print(sx: String): Unit = System.out.print(sx)
+    def myprint(sx: String): Unit = System.out.print(sx)
+    override def write(sx: String): Unit = System.out.print(sx)
     override def toString: String = "StdOut"
   }
 }

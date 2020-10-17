@@ -44,40 +44,45 @@ class ForceOverrides extends SemanticRule("ForceOverrides") {
       case _ => false
     }
 
+  private def defnFix(t: Tree)(implicit doc: SemanticDocument): List[Patch] = {
+    val parentMethods = t.symbol.info match {
+      case Some(info) =>
+        info.signature match {
+          case ClassSignature(typeParameters, parents, self, declarations) =>
+            parents.flatMap(getMethods)
+          case _ => Nil
+        }
+      case None => Nil
+    }
+    t.collect {
+      case t@Defn.Def(mods, name, tparams, paramss, typeOpt, term) =>
+        t.symbol.info match {
+          case Some(info) =>
+            info.signature match {
+              case signature@MethodSignature(typeParameters, parameterLists, returnType) =>
+                if (parentMethods.exists {
+                  case (methodName, methodSignature) =>
+                    methodName == name.value &&
+                      paramListEq(methodSignature.typeParameters, signature.typeParameters) &&
+                      paramListListEq(methodSignature.parameterLists, signature.parameterLists) &&
+                      methodSignature.returnType == signature.returnType
+                }) {
+                  Patch.addLeft(t, "override ")
+                } else {
+                  Patch.empty
+                }
+            }
+          case None => Patch.empty
+        }
+    }
+  }
 
   override def fix(implicit doc: SemanticDocument): Patch = {
     doc.tree.collect {
+      case t : Defn.Class =>
+        defnFix(t)
       case t @ Defn.Object(mod, termName, template) =>
-        val parentMethods = t.symbol.info match {
-          case Some(info) =>
-            info.signature match {
-              case ClassSignature(typeParameters, parents, self, declarations) =>
-                parents.flatMap(getMethods)
-              case _ => Nil
-            }
-          case None => Nil
-        }
-        t.collect {
-          case t @ Defn.Def(mods, name, tparams, paramss, typeOpt, term) =>
-            t.symbol.info match {
-              case Some(info) =>
-                info.signature match {
-                  case signature @ MethodSignature(typeParameters, parameterLists, returnType) =>
-                    if (parentMethods.exists {
-                      case (methodName, methodSignature) =>
-                        methodName == name.value &&
-                          paramListEq(methodSignature.typeParameters, signature.typeParameters) &&
-                          paramListListEq(methodSignature.parameterLists, signature.parameterLists) &&
-                          methodSignature.returnType == signature.returnType
-                    }) {
-                      Patch.addLeft(t, "override ")
-                    } else {
-                      Patch.empty
-                    }
-                }
-              case None => Patch.empty
-            }
-        }
+        defnFix(t)
     }
   }.flatten.asPatch
 
