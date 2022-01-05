@@ -1,0 +1,32 @@
+package fix
+
+object Examples {
+  trait Printer {
+    def print(s: String): Unit
+  }
+
+  abstract class Writer {
+    def write(s: String): Unit
+  }
+
+  object StdOut extends Writer with Printer {
+    override def print(sx: String): Unit = System.out.print(sx)
+    def myprint(sx: String): Unit = System.out.print(sx)
+    override def write(sx: String): Unit = System.out.print(sx)
+    override def toString: String = "StdOut"
+  }
+
+  class StdOutImpl extends Writer with Printer {
+    override def print(sx: String): Unit = System.out.print(sx)
+    def myprint(sx: String): Unit = System.out.print(sx)
+    override def write(sx: String): Unit = System.out.print(sx)
+    override def toString: String = "StdOutImpl"
+  }
+
+  class StdOutOverrideImpl extends Writer with Printer {
+    override def print(sx: String): Unit = System.out.print(sx)
+    def myprint(sx: String): Unit = System.out.print(sx)
+    override def write(sx: String): Unit = System.out.print(sx)
+    override def toString: String = "StdOutOverrideImpl"
+  }
+}
