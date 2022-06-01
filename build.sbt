@@ -2,7 +2,7 @@ lazy val V = _root_.scalafix.sbt.BuildInfo
 
 inThisBuild(
   List(
-    version := "0.0.1",
+    version := "0.0.2",
     organization := "com.github.xplosunn",
     homepage := Some(url("https://github.com/xplosunn/ForceOverrides")),
     licenses := List("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),

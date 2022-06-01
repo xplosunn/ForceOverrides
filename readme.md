@@ -30,7 +30,7 @@ object StdOut extends Printer {
 
 Add to `build.sbt`:
 
-`ThisBuild / scalafixDependencies += "com.github.xplosunn" %% "ForceOverrides" % "0.0.1"`
+`ThisBuild / scalafixDependencies += "com.github.xplosunn" %% "ForceOverrides" % "0.0.2"`
 
 Add to `.scalafix.conf`:
 
