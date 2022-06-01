@@ -7,7 +7,7 @@ inThisBuild(
     homepage := Some(url("https://github.com/xplosunn/ForceOverrides")),
     licenses := List("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
     scalaVersion := V.scala212,
-    crossScalaVersions := List(V.scala211, V.scala212, V.scala213),
+    crossScalaVersions := List(V.scala212, V.scala213),
     addCompilerPlugin(scalafixSemanticdb),
     scalacOptions ++= List(
       "-Yrangepos",
