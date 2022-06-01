@@ -21,7 +21,7 @@ final class ForceOverrides extends SemanticRule("fix.ForceOverrides") {
                       case signature: MethodSignature =>
                         declaration.displayName -> signature
                     }
-                }
+                } ::: parents.flatMap(getMethods)
               case _ => Nil
             }
           case None => Nil
@@ -88,11 +88,14 @@ final class ForceOverrides extends SemanticRule("fix.ForceOverrides") {
   }
 
   override def fix(implicit doc: SemanticDocument): Patch =
-    doc.tree.collect {
-      case t: Defn.Class =>
-        defnFix(t)
-      case t @ Defn.Object(mod, termName, template) =>
-        defnFix(t)
-    }.flatten.asPatch
+    doc.tree
+      .collect {
+        case t: Defn.Class =>
+          defnFix(t)
+        case t @ Defn.Object(mod, termName, template) =>
+          defnFix(t)
+      }
+      .flatten
+      .asPatch
 
 }

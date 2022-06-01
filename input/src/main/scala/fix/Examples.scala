@@ -32,4 +32,22 @@ object Examples {
     override def write(sx: String): Unit = System.out.print(sx)
     override def toString: String = "StdOutOverrideImpl"
   }
+
+  trait Super1 {
+    def method1(): Unit
+  }
+
+  trait Super2 extends Super1 {
+    def method2(): Unit
+  }
+
+  trait Super3 extends Super2 {
+    def method3(): Unit
+  }
+
+  class ExtendsSuper extends Super3 {
+    def method3(): Unit = ()
+    def method2(): Unit = ()
+    def method1(): Unit = ()
+  }
 }
