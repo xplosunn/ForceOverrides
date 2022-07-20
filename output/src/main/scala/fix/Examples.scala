@@ -1,5 +1,8 @@
 package fix
 
+import scala.annotation.tailrec
+import scala.util.Random
+
 object Examples {
   trait Printer {
     def print(s: String): Unit
@@ -46,5 +49,9 @@ object Examples {
     override def method3(): Unit = ()
     override def method2(): Unit = ()
     override def method1(): Unit = ()
+  }
+
+  class TailRec extends Super1 {
+    @tailrec final override def method1(): Unit = if (Random.nextInt() == 0) method1()
   }
 }
