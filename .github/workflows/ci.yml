@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ "**" ]
+    tags: [ v* ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        java:
+          - name: AdoptOpenJDK 8
+            version: adopt@1.8
+          - name: AdoptOpenJDK 11
+            version: adopt@1.11
+    name: With ${{ matrix.java.name }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: olafurpg/setup-scala@v13
+        with:
+          java-version: ${{ matrix.java.version }}
+      - uses: coursier/cache-action@v6
+      - name: Lint
+        run: sbt scalafmtCheckAll
+      - name: Test
+        run: sbt test
