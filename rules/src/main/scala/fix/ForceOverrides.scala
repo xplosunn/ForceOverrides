@@ -75,7 +75,7 @@ final class ForceOverrides extends SemanticRule("fix.ForceOverrides") {
                 if (t.mods.map(_.toString).contains("override")) {
                   Patch.empty
                 } else {
-                  Patch.addLeft(t, "override ")
+                  Patch.replaceTree(t, t.copy(mods = t.mods :+ Mod.Override()).toString())
                 }
               } else {
                 Patch.empty

@@ -3,6 +3,9 @@ rule = fix.ForceOverrides
  */
 package fix
 
+import scala.annotation.tailrec
+import scala.util.Random
+
 object Examples {
   trait Printer {
     def print(s: String): Unit
@@ -49,5 +52,10 @@ object Examples {
     def method3(): Unit = ()
     def method2(): Unit = ()
     def method1(): Unit = ()
+  }
+
+  class TailRec extends Super1 {
+    @tailrec
+    final def method1(): Unit = if (Random.nextInt() == 0) method1()
   }
 }
